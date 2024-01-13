@@ -1,0 +1,27 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//initiate new model
+model User {
+  id String @id @default(uuid())
+  
+  //get from clerk when user signs up
+  username String @unique
+  imageUrl String @db.Text //@db.Text: can store more characters than usual string
+  
+  //id that used in Clerk
+  externalUserId String @unique
+
+  //our thing
+  bio String? @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
