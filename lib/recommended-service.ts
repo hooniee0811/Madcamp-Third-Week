@@ -14,6 +14,7 @@ export const getRecommended = async () => {
 
   let users = [];
 
+  //on status of logged in
   if (userId) {
     users = await db.user.findMany({
       where: {
@@ -43,12 +44,27 @@ export const getRecommended = async () => {
           },
         ],
       },
+      include: {
+        stream: {
+          select: {
+            isLive: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
     });
   } else {
+    //on status of logged out
     users = await db.user.findMany({
+      include: {
+        stream: {
+          select: {
+            isLive: true,
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
       },
