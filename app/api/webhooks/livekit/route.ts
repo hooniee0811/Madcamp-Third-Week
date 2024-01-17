@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
-import { db } from "@/lib/db";
 import { WebhookReceiver } from "livekit-server-sdk";
+
+import { db } from "@/lib/db";
 
 const receiver = new WebhookReceiver(
   process.env.LIVEKIT_API_KEY!,
@@ -20,7 +21,9 @@ export async function POST(req: Request) {
 
   if (event.event === "ingress_started") {
     await db.stream.update({
-      where: { ingressId: event.ingressInfo?.ingressId },
+      where: {
+        ingressId: event.ingressInfo?.ingressId,
+      },
       data: {
         isLive: true,
       },
@@ -29,7 +32,9 @@ export async function POST(req: Request) {
 
   if (event.event === "ingress_ended") {
     await db.stream.update({
-      where: { ingressId: event.ingressInfo?.ingressId },
+      where: {
+        ingressId: event.ingressInfo?.ingressId,
+      },
       data: {
         isLive: false,
       },
